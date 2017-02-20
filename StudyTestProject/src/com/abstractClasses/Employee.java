@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * Created by jiangqin on 17/2/20.
  */
-public class Employee extends Person{
+public class Employee extends Person {
     private double salary;
     private LocalDate hireDay;
 
