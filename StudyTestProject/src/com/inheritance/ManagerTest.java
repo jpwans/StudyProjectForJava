@@ -23,7 +23,14 @@ public class ManagerTest {
      if (staff[1] instanceof Manager){
         boss = (Manager) staff[1];
      }
-//String
-//     Manager bos = (Manager) new Employee("Harry Hacker",50000,1989,10,1);
+
+     double d =  max(3.1,4.5,-5);
+     System.out.println("sss" +d);
+ }
+ public static double max(double... values)
+ {
+     double largest = Double.NEGATIVE_INFINITY;
+     for (double v: values) if(v>largest) largest = v;
+     return largest;
  }
 }
