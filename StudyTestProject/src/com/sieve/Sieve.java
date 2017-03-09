@@ -34,7 +34,6 @@ public class Sieve {
             if (b.get(i)) count++;
             i++;
         }
-
         long end = System.currentTimeMillis();
         System.out.println(count + " primes");
         System.out.println((end - start) + "milliseconds");
