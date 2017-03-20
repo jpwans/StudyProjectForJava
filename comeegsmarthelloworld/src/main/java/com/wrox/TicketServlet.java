@@ -39,6 +39,13 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (req.getSession().getAttribute("username") == null)
+        {
+            resp.sendRedirect("login");
+            return;
+        }
+
         String action = req.getParameter("action");
         if (action == null)
             action = "list";
@@ -46,7 +53,8 @@ public class TicketServlet extends HttpServlet {
         switch (action)
         {
             case  "create" :
-                this.showTicketForm(resp);
+//                this.showTicketForm(resp);
+                this.showTicketFormByJsp(req,resp);
                 break;
             case "view" :
                 this.viewTicket(req,resp);
@@ -56,7 +64,7 @@ public class TicketServlet extends HttpServlet {
                 break;
             case "list":
             default:
-                this.listTickets(resp);
+                this.listTicketsbyJsp(req,resp);
                 break;
         }
 
@@ -64,6 +72,12 @@ public class TicketServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getSession().getAttribute("username") == null)
+        {
+            resp.sendRedirect("login");
+            return;
+        }
+
         String action = req.getParameter("action");
         if (action == null)
             action = "list";
@@ -78,6 +92,11 @@ public class TicketServlet extends HttpServlet {
                 resp.sendRedirect("tickets");
                 break;
         }
+    }
+
+    private void showTicketFormByJsp(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException
+    {
+        request.getRequestDispatcher("/WEB-INF/jsp/view/ticketForm.jsp").forward(request,response);
     }
 
     private void showTicketForm(HttpServletResponse response) throws ServletException, IOException
@@ -106,34 +125,43 @@ public class TicketServlet extends HttpServlet {
 
     private void viewTicket(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException
     {
+
         String idString = request.getParameter("ticketId");
         Ticket ticket = this.getTicket(idString,response);
         if (ticket == null) return;
-        PrintWriter writer = this.writeHeader(response);
 
-        writer.append("<h2>Ticket #").append(idString)
-                .append(": ").append(ticket.getSubject()).append("</h2>\r\n");
-        writer.append("<i>Customer Name - ").append(ticket.getCustomerName())
-                .append("</i><br/><br/>\r\n");
-        writer.append(ticket.getBody()).append("<br/><br/>\r\n");
+        request.setAttribute("ticketId",idString);
+        request.setAttribute("ticket",ticket);
 
-        if (ticket.getNumberOfAttachments() > 0)
-        {
-            writer.append("Attachments: ");
-            int i = 0;
-            for (Attachment attachment : ticket.getAttachments())
-            {
-                if (i++ > 0)
-                    writer.append(", ");
-                writer.append("<a href = \"tickets?action=download&ticketId=").append(idString)
-                        .append("&attachment=").append(attachment.getName()).append("\">")
-                        .append(attachment.getName()).append("</a>");
-            }
-            writer.append("<br/><br/>\r\n");
-        }
-
-        writer.append("<a href=\"tickets\">Return to list tickets</a>\r\n");
-        this.writeFooter(writer);
+        request.getRequestDispatcher("/WEB-INF/jsp/view/viewTicket.jsp").forward(request,response);
+//        String idString = request.getParameter("ticketId");
+//        Ticket ticket = this.getTicket(idString,response);
+//        if (ticket == null) return;
+//        PrintWriter writer = this.writeHeader(response);
+//
+//        writer.append("<h2>Ticket #").append(idString)
+//                .append(": ").append(ticket.getSubject()).append("</h2>\r\n");
+//        writer.append("<i>Customer Name - ").append(ticket.getCustomerName())
+//                .append("</i><br/><br/>\r\n");
+//        writer.append(ticket.getBody()).append("<br/><br/>\r\n");
+//
+//        if (ticket.getNumberOfAttachments() > 0)
+//        {
+//            writer.append("Attachments: ");
+//            int i = 0;
+//            for (Attachment attachment : ticket.getAttachments())
+//            {
+//                if (i++ > 0)
+//                    writer.append(", ");
+//                writer.append("<a href = \"tickets?action=download&ticketId=").append(idString)
+//                        .append("&attachment=").append(attachment.getName()).append("\">")
+//                        .append(attachment.getName()).append("</a>");
+//            }
+//            writer.append("<br/><br/>\r\n");
+//        }
+//
+//        writer.append("<a href=\"tickets\">Return to list tickets</a>\r\n");
+//        this.writeFooter(writer);
     }
 
     private void downloadAttachment(HttpServletRequest request,HttpServletResponse response)
@@ -163,6 +191,12 @@ public class TicketServlet extends HttpServlet {
         stream.write(attachment.getContents());
     }
 
+    private void listTicketsbyJsp(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException
+    {
+        request.setAttribute("ticketDatabase",this.ticketDatabase);
+
+        request.getRequestDispatcher("/WEB-INF/jsp/view/listTickets.jsp").forward(request,response);
+    }
     private void listTickets(HttpServletResponse response) throws  ServletException, IOException
     {
         PrintWriter writer = this.writeHeader(response);
@@ -193,9 +227,10 @@ public class TicketServlet extends HttpServlet {
                               HttpServletResponse response)throws ServletException,IOException
     {
         Ticket ticket = new Ticket();
-        ticket.setCustomerName(request.getParameter("customerName"));
+        ticket.setCustomerName((String )request.getSession().getAttribute("username"));
         ticket.setSubject(request.getParameter("subject"));
         ticket.setBody(request.getParameter("body"));
+
 
         Part filePart = request.getPart("file1");
         if (filePart != null && filePart.getSize() > 0)

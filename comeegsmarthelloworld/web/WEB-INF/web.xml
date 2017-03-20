@@ -5,9 +5,9 @@
          version="3.1">
 
     <display-name>
-        Hello Word Application 
+        Hello Word Application
     </display-name>
-    
+
     <servlet>
         <servlet-name>helloServlet</servlet-name>
         <servlet-class>com.wrox.HelloServlet</servlet-class>
@@ -26,12 +26,12 @@
             <param-value>10.0.12.5</param-value>
         </init-param>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>servletParameterServlet</servlet-name>
         <url-pattern>/servletParameters</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>helloServlet</servlet-name>
         <url-pattern>/greeting</url-pattern>
@@ -47,4 +47,44 @@
         <param-name>settingTwo</param-name>
         <param-value>bar</param-value>
     </context-param>
+
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <url-pattern>*.jspf</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <scripting-invalid>false</scripting-invalid>
+            <include-prelude>/WEB-INF/jsp/base.jspf</include-prelude>
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+            <default-content-type>text/html</default-content-type>
+        </jsp-property-group>
+    </jsp-config>
+
+    <!--<session-config>-->
+        <!--<session-timeout>30</session-timeout>-->
+        <!--<cookie-config>-->
+            <!--<name>JSESSIONID</name>-->
+            <!--<domain>example.org</domain>-->
+            <!--<path>/shop</path>-->
+            <!--<comment>-->
+                <!--<![CDATA[Keeps you logged in. See our privacy policy for more information.]]>-->
+            <!--</comment>-->
+            <!--<http-only>-->
+                <!--true-->
+            <!--</http-only>-->
+            <!--<secure>false</secure>-->
+            <!--<max-age>1800</max-age>-->
+        <!--</cookie-config>-->
+        <!--<tracking-mode>COOKIE</tracking-mode>-->
+        <!--<tracking-mode>URL</tracking-mode>-->
+        <!--<tracking-mode>SSL</tracking-mode>-->
+    <!--</session-config>-->
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
 </web-app>
