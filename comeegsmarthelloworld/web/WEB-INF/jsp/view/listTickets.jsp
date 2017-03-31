@@ -4,6 +4,8 @@
     Map<Integer, Ticket> ticketDatabase =
             (Map<Integer, Ticket>)request.getAttribute("ticketDatabase");
 %>
+
+<%--@elvariable id="ticketDatabase" type="java.util.Map<>"--%>
 <!DOCTYPE html>
 <html>
     <head>

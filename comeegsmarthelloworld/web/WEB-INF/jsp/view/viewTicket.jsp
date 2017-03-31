@@ -1,12 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: jiangqin
-  Date: 17/3/16
-  Time: 13:40
-  To change this template use File | Settings | File Templates.
---%>
-
-<%@page session="false" %>
+<%--@elvariable id="ticketId" type="java.lang.String"--%>
+<%--@elvariable id="ticket" type="com.wrox.Ticket"--%>
 
 <%
     String ticketId = (String) request.getAttribute("ticketId");
@@ -18,31 +11,42 @@
 </head>
 <body>
 <a href="<c:url value="/login?logout"/>">Logout</a>
-<h2>Ticket # <%= ticketId %> : <%= ticket.getSubject() %>
+<h2>Ticket # ${ticketId} : ${ticket.subject}
 </h2>
-<i>Customer Name - <%= ticket.getCustomerName()%>
+<i>Customer Name - ${ticket.customerName}
 </i><br/><br/>
-<%= ticket.getBody()%> <br/><br/>
-<%
-    if (ticket.getNumberOfAttachments() > 0) {
-%>Attachments: <%
-    int i = 0;
-    for (Attachment a : ticket.getAttachments()) {
-        if (i++ > 0)
-            out.print(", ");
-                %><a href="
-                        <c:url value="/tickets">
-                        <c:param name="action" value="download" />
-                        <c:param name="ticketId" value="<%= ticketId %>" />
-                        <c:param name="attachment" value="<%= a.getName() %>"/>
-                        </c:url>
-                "><%= a.getName() %>
-</a><%
-    }
-%><br/><br/><%
-    }
-%>
+${ticket.body} <br/><br/>
+<%--<%--%>
+    <%--if (ticket.getNumberOfAttachments() > 0) {--%>
+<%--%>Attachments: <%--%>
+    <%--int i = 0;--%>
+    <%--for (Attachment a : ticket.getAttachments()) {--%>
+        <%--if (i++ > 0)--%>
+            <%--out.print(", ");--%>
+                <%--%><a href="--%>
+                        <%--<c:url value="/tickets">--%>
+                        <%--<c:param name="action" value="download" />--%>
+                        <%--<c:param name="ticketId" value="${ticketId}" />--%>
+                        <%--<c:param name="attachment" value="<%= a.getName() %>"/>--%>
+                        <%--</c:url>--%>
+                <%--"><%= a.getName() %>--%>
+<%--</a><%--%>
+    <%--}--%>
+<%--%><br/><br/><%--%>
+    <%--}--%>
+<%--%>--%>
 
+<c:if test="${ticket.numberOfAttachments > 0}">
+    Attachments:
+    <c:forEach items="${ticket.attachments}" var="attachment" varStatus="status">
+    <c:if test="${!status.first}">, </c:if>
+    <a href="<c:url value="/tickets">
+            <c:param name="action" value="download"/>
+            <c:param name="ticketId" value="${ticketId}"/>
+            <c:param name="attachment" value="${attachment.name}"/>
+            </c:url>"><c:out value="${attachment.name}" /></a>
+    </c:forEach><br/><br/>
+</c:if>
 <a href="<c:url value="/tickets" />">Return to list tickets</a>
 </body>
 </html>
