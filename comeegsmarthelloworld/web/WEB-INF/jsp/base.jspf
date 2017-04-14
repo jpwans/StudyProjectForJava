@@ -11,4 +11,7 @@
 <%@ taglib prefix="x"
            uri="http://java.sun.com/jsp/jstl/xml" %>
 
-<%@ taglib prefix="" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="myTags" tagdir="/WEB-INF/tags" %>
+
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="f" tagdir="/WEB-INF/tags/formats" %>
