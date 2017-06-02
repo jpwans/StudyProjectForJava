@@ -6,7 +6,7 @@ import java.util.TimeZone;
  * Created by jiangqin on 17/4/14.
  */
 public class Person {
-    private final Date birthDate;
+    private Date birthDate;
 
     private static final Date BOOM_START;
     private static final Date BOOM_END;
